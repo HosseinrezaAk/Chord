@@ -1,6 +1,5 @@
 import random
 
-
 data_keys = []
 class Data:
     def __init__(self,v):
@@ -15,7 +14,10 @@ class Data:
         data_keys.append(val_key)
         return val_key
 
-
 class Node:
     def __init__(self):
-        
+        self.id = self.addId()
+        self.pred = None
+        self.succ = None
+        self.datas = []
+        self.ft = []
