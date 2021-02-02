@@ -2,6 +2,7 @@ import random
 
 data_keys = []
 node_ids = []
+nodes = []
 class Data:
     def __init__(self,v):
         self.val = v
@@ -26,5 +27,12 @@ class Node:
         val_id = random.randint(1,32)
         while(val_id in node_ids):
             val_id = random.randint(1,32)
-        node_ids.append(val_id)
+        nodes.append(self)
+        node_ids.sort() # bayad ye sorti pyda knm bar hasbe field sort kne 
         return val_id
+
+    def pred_cal(self):
+        node_index = node_ids.index(self.id)
+        if (len(node_ids) == 1):
+            return 
+        else:
