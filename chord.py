@@ -8,12 +8,12 @@ class Data:
         self.key = self.addKey()
     
     def addKey(self):
-
-        self.key = random.randint(1,32)
-        while(self.key in data_keys):
-            self.key = random.randint(1,32)
-    
-        data_keys.append(self.key)
+        val_key = random.randint(1,32)
+        while(val_key in data_keys):
+            val_key = random.randint(1,32)
+        
+        data_keys.append(val_key)
+        return val_key
 
 
 class Node:
