@@ -25,14 +25,31 @@ class Node:
 
     def addId(self):
         val_id = random.randint(1,32)
-        while(val_id in node_ids):
-            val_id = random.randint(1,32)
-        nodes.append(self)
-        node_ids.sort() # bayad ye sorti pyda knm bar hasbe field sort kne 
+        node_counter =0
+
+        while( node_counter > len(nodes) ):
+            if(nodes[node_counter].id == val_id):
+                    val_id = random.randint(1,32)
+        
         return val_id
 
     def pred_cal(self):
-        node_index = node_ids.index(self.id)
+        
         if (len(node_ids) == 1):
             return 
         else:
+class Chord():
+    def __init__(self):
+        nodes_num = 32
+
+    def addNode(self):
+        peer = Node()
+        nodes.append(peer)
+        nodes.sort(key=lambda x: peer.id)
+        
+        
+
+    def deleteNode():
+        pass
+
+    def
