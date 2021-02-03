@@ -34,7 +34,7 @@ class Node:
         return val_id
 
     def pred_cal(self,peer_index):
-        
+        pred_index = None
         if(peer_index == 0 ):
             if(len(nodes) == 1):
                 return 
@@ -46,6 +46,17 @@ class Node:
             pred_index = peer_index - 1 
             self.pred = nodes[pred_index]
     
+    def succ_cal(self, peer_index):
+        succ_index =None
+        if(peer_index == len(nodes)-1):
+            if(len(nodes) == 1 ):
+                return
+            else:
+                succ_index = 0
+                self.succ = nodes[succ_index]
+        else:
+            succ_index = peer_index + 1
+            self.succ = nodes[succ_index]
 class Chord():
     def __init__(self):
         nodes_num = 32
@@ -54,7 +65,8 @@ class Chord():
         peer = Node()
         nodes.append(peer)
         nodes.sort(key=lambda x: peer.id)
-        peer.pred_cal(nodes.index(peer)) #To do
+        peer.pred_cal(nodes.index(peer)) 
+        peer.succ_cal(nodes.index(peer))
         
 
     def deleteNode():
