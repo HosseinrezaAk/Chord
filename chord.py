@@ -76,7 +76,6 @@ class Chord():
             if(next_node.datas[i].key <= peer.id):
                 peer.datas.append(next_node.datas[i])
 
-    def deleteNode():
+    def deleteNode(self):
         pass
 
-    def
