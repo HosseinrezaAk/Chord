@@ -1,7 +1,7 @@
 import random
 
 data_keys = []
-node_ids = []
+
 nodes = []
 class Data:
     def __init__(self,v):
