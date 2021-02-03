@@ -39,8 +39,13 @@ class Node:
             if(len(nodes) == 1):
                 return 
             else:
-                self.pred = len(nodes) - 1
+                pred_index = len(nodes) - 1
+                self.pred = nodes[peer_index]
 
+        else:
+            pred_index = peer_index - 1 
+            self.pred = nodes[pred_index]
+    
 class Chord():
     def __init__(self):
         nodes_num = 32
