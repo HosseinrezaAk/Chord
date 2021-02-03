@@ -62,8 +62,9 @@ class Node:
     def FingerTable(self):
         row = 5
         i = 0
+        self.ft =[]
         while( i < row ):
-            temp = self.id + 2**(i-1) % len(nodes) 
+            temp = self.id + 2**(i-1) % nodes[len(nodes)-1].id 
             counter = 0
             while (counter < len(nodes)):
                 if(nodes[counter].key >= temp):
@@ -84,6 +85,17 @@ class Chord():
         peer.pred_cal(nodes.index(peer)) 
         peer.succ_cal(nodes.index(peer))
         self.updateDataOnAdd(peer) #data az node badi miad to node jadid
+        peer.FingerTable()
+
+        # baraye update kardan finger table
+        counter = 0
+        i = nodes.index(peer)-1
+        while(counter < 5 ):
+            nodes[i].FingerTable()
+            counter += 1 
+            i -= 1
+            
+        
 
     def updateDataOnAdd(self,peer):
         next_node = peer.succ
