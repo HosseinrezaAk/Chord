@@ -46,7 +46,7 @@ class Chord():
         peer = Node()
         nodes.append(peer)
         nodes.sort(key=lambda x: peer.id)
-        
+        peer.pred_cal() #To do
         
 
     def deleteNode():
