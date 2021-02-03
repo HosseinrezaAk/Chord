@@ -94,7 +94,7 @@ class Chord():
             nodes[i].FingerTable()
             counter += 1 
             i -= 1
-            
+
         
 
     def updateDataOnAdd(self,peer):
@@ -103,6 +103,31 @@ class Chord():
             if(next_node.datas[i].key <= peer.id):
                 peer.datas.append(next_node.datas[i])
 
-    def deleteNode(self):
-        pass
+    def deleteNode(self,id):
+        del_peer = Node()
+        peer_after = Node()
+        peer_before = Node()
+        for i in range(len(nodes)):
+            if(nodes[i].id == id):
+                del_peer = nodes[i]
+                break
+            else:
+                return 
+        peer_after = nodes[i+1]
+        peer_before = nodes[i-1]
+        peer_after.pred_cal(i-1)
+        peer_before.succ_cal(i+1)
+
+        peer_after.datas = peer_after.datas+del_peer.datas
+
+        counter = 0
+        i = nodes.index(del_peer)-1
+        while(counter < 5 ): #update fingerTables before deleted Node
+            nodes[i].FingerTable()
+            counter += 1 
+            i -= 1
+            
+        nodes.remove(del_peer)
+
+        
 
