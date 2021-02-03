@@ -57,6 +57,8 @@ class Node:
         else:
             succ_index = peer_index + 1
             self.succ = nodes[succ_index]
+
+
 class Chord():
     def __init__(self):
         nodes_num = 32
@@ -68,6 +70,11 @@ class Chord():
         peer.pred_cal(nodes.index(peer)) 
         peer.succ_cal(nodes.index(peer))
         
+    def updateDataOnAdd(self,peer):
+        next_node = peer.succ
+        for i in range(len(next_node.datas)) :
+            if(next_node.datas[i].key <= peer.id):
+                peer.datas.append(next_node.datas[i])
 
     def deleteNode():
         pass
