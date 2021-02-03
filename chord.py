@@ -30,6 +30,7 @@ class Node:
         while( node_counter > len(nodes) ):
             if(nodes[node_counter].id == val_id):
                     val_id = random.randint(1,32)
+            node_counter += 1
         
         return val_id
 
@@ -58,6 +59,19 @@ class Node:
             succ_index = peer_index + 1
             self.succ = nodes[succ_index]
 
+    def FingerTable(self):
+        row = 5
+        i = 0
+        while( i < row ):
+            temp = self.id + 2**(i-1) % len(nodes) 
+            counter = 0
+            while (counter < len(nodes)):
+                if(nodes[counter].key >= temp):
+                    self.ft.append(temp)
+                    break
+                counter += 1
+            i += 1
+
 
 class Chord():
     def __init__(self):
@@ -69,7 +83,8 @@ class Chord():
         nodes.sort(key=lambda x: peer.id)
         peer.pred_cal(nodes.index(peer)) 
         peer.succ_cal(nodes.index(peer))
-        
+        self.updateDataOnAdd(peer) #data az node badi miad to node jadid
+
     def updateDataOnAdd(self,peer):
         next_node = peer.succ
         for i in range(len(next_node.datas)) :
