@@ -6,9 +6,9 @@ nodes = []
 
 all_data =[]
 class Data:
-    def __init__(self,v):
+    def __init__(self,v,data_id):
         self.val = v
-        self.key = self.addKey()
+        self.key = data_id
         
     def addKey(self):
         val_key = random.randint(1,32)
@@ -28,7 +28,7 @@ class Node:
         self.ft = []
 
     def addId(self):
-        val_id = random.randint(1,28)
+        val_id = random.randint(1,32)
         node_counter =0
 
         while( node_counter > len(nodes) ):
@@ -153,9 +153,9 @@ class Chord():
             counter += 1 
             i -= 1
 
-    def dataAdder(self,value):
-        new_data = Data(value)
-        new_data.addKey()
+    def dataAdder(self,value,data_id):
+        new_data = Data(value,data_id)
+        
             
         #where data should go
         for i in range(len(nodes)):
@@ -168,8 +168,9 @@ class Chord():
         for i in range(len(nodes)):
             if(nodes[i].id == node_id):
                 peer = nodes[i]
-
-        for i in range(len(peer.ft)):
+        i =0  
+        while( i < len(peer.ft)):
+            print("peer.id: "+ str(peer.id) +", i: " + str(i))
             if(peer.ft[i] == data_key ):
                 result_peer_id = peer.ft[i]
                 
@@ -181,7 +182,10 @@ class Chord():
                 for j in range(len(nodes)): # searching for new peer
                     if(nodes[j].id == peer.ft[i]):
                         peer = nodes[j] #peer = 18
+                        # print("HELLLLLLLLLLLLL "+ str(peer.id))
                         i = 0
+            # elif(i != len(peer.ft)-1 and peer.ft[i] < data_key):
+            #     i += 1 
             elif( i != 0 and peer.ft[i] > data_key):
                 #vasate ft table idi bozorgtar az key mibinim pas ghablish ro bayad begirim
                 for j in range(len(nodes)):
@@ -190,12 +194,14 @@ class Chord():
                         i = 0
             elif(i == 0 and peer.ft[i] > data_key):
                 result_peer_id = peer.ft[i]
-
+                
                 for k in range(len(nodes)):
+
                     if( nodes[k].id == result_peer_id):
                         return nodes[k]
-        
-
+            
+            else:
+                i += 1
 if __name__ == '__main__':
     
     net = Chord()
@@ -209,19 +215,22 @@ if __name__ == '__main__':
     net.addNode(21)
     net.addNode(28)
 
-    net.dataAdder(2) # 2 is value not key
-    net.dataAdder(6)
-    net.dataAdder(1)
-    net.dataAdder(12)
-    net.dataAdder(26)
-    net.dataAdder(20)
+    net.dataAdder(2,3) # 2 value , 3 key
+    net.dataAdder(6,4)
+    net.dataAdder(1,26)
+    net.dataAdder(12,20)
+    net.dataAdder(26,12)
+    net.dataAdder(20,21)
 
+    temp = net.lookup(11,3)
+    
     for i in range(len(nodes)):
         print(nodes[i])
         for x in nodes[i].datas:
             
             print(" key: " + str(x.key) )
-        
+    
+    print("result : " + str(temp))
     # for i in range(len(all_data)): #Debugger DataAdder
     #     print("key: "+ str(all_data[i].key)+ ", value: "+ str(all_data[i].val))
 
