@@ -12,104 +12,11 @@ I have both English and Persian comments ,
 import random
 from threading import Lock, Condition, Thread
 
-class Monitor:
-
-    def __init__(self):
-        self.nLookups = 0
-        self.nDatas = 0
-        self.busy = False
-        self.OKtoAddRemove = Condition() 
-        self.OKtoLookup = Condition() 
-        self.OKtoAddData = Condition()
-        self.mutex = Lock()
-
-    def Lock_LookUp(self):
-        self.OKtoLookup.acquire()
-        self.mutex.acquire()
-        while self.busy:
-            self.mutex.release()
-            self.OKtoLookup.wait()
-            self.mutex.acquire()
-        self.nLookups += 1
-        self.mutex.release()
-        self.OKtoLookup.notifyAll()
-        self.OKtoLookup.release()
-    def Release_LookUp(self):
-        self.OKtoLookup.acquire()
-        self.mutex.acquire()
-        self.nLookups -= self.nLookups
-        if self.nLookups == 0:
-            self.OKtoAddData.acquire()
-            self.OKtoAddData.notify()
-            self.OKtoAddData.release()
-
-            self.OKtoAddRemove.acquire()
-            self.OKtoAddRemove.notify()
-            self.OKtoAddRemove.release()
-        self.mutex.release()
-        self.OKtoLookup.release()
-
-    def Lock_DataAdder(self):
-        self.OKtoAddData.acquire()
-        self.mutex.acquire()
-        while self.busy:
-            self.mutex.release()
-            self.OKtoAddData.wait()
-            self.mutex.acquire()
-        self.nDatas += 1
-        self.mutex.release()
-        self.OKtoAddData.notifyAll()
-        self.OKtoAddData.release()
-    def Release_DataAdder(self):
-        self.OKtoAddData.acquire()
-        self.mutex.acquire()
-        self.nDatas -= self.nDatas
-        if self.nDatas == 0:
-            self.OKtoLookup.acquire()
-            self.OKtoLookup.notify()
-            self.OKtoLookup.release()
-
-            self.OKtoAddRemove.acquire()
-            self.OKtoAddRemove.notify()
-            self.OKtoAddRemove.release()
-        self.mutex.release()
-        self.OKtoAddData.release()
-
-    def Lock_Add_Delete(self):
-        self.OKtoAddRemove.acquire()
-        self.mutex.acquire()
-        while self.busy or self.nDatas > 0 or self.nLookups > 0:
-            self.mutex.release()
-            self.OKtoAddRemove.wait()
-            self.mutex.acquire()
-        self.busy = True
-        self.mutex.release()
-        self.OKtoAddRemove.release()
-        
-    def Release_Add_Delete(self):
-        self.OKtoAddRemove.acquire()
-        self.OKtoAddData.acquire()
-        self.OKtoLookup.acquire()
-        self.mutex.acquire()
-        self.busy = False
-        self.mutex.release()
-        self.OKtoAddRemove.notify()
-        self.OKtoAddRemove.release()
-        self.OKtoAddData.notify()
-        self.OKtoAddData.release()
-        self.OKtoLookup.notify()
-        self.OKtoLookup.release()
-
-
-
-
-
-
 
 data_keys = []
 nodes = []
 all_data =[] # this was for testing truthness of Data assigning 
-monitor = Monitor()
+
 class Data:
     ''' 
         Man baraye Test codam ro az halate dynamic dar ovordam ke betunam rahat testesh konam
@@ -206,7 +113,7 @@ class Node:
         # s = [self.id,self.pred,self.succ,self.datas,self.ft]
         s = [self.id,self.ft]
         # listToStr = ' ,'.join([str(elem) for elem in s]) 
-        listToStr = "\nNode ID: "+ str(self.id)+ ", FingerTable: "+ str(self.ft)
+        listToStr = "\n### Node ID: "+ str(self.id)+ ", FingerTable: "+ str(self.ft)
         return listToStr
 
 class Chord():
@@ -329,10 +236,109 @@ class Chord():
                 i += 1
 
         monitor.Release_LookUp()
-                
+
+
+class Monitor:
+
+    '''
+        Class monitor karaiii in kelas baraye ghesmate Hamravandi hast va 
+        az nazare implementation mesle code ke sare kelas tozih dadin mibashad
+    '''
+    def __init__(self):
+        self.data_adder_counter = 0
+        self.busy = False
+        self.lookup_counter = 0
+        self.lookup_queue = Condition() 
+        self.dataAdder_queue = Condition()
+        self.add_delete_queue = Condition() 
+        self.mutex = Lock()
+
+    def Lock_LookUp(self):
+
+        self.lookup_queue.acquire()
+        self.mutex.acquire()
+        while self.busy:
+            self.mutex.release()
+            self.lookup_queue.wait()
+            self.mutex.acquire()
+        self.lookup_counter += 1
+        self.mutex.release()
+        self.lookup_queue.notifyAll()
+        self.lookup_queue.release()
+    def Release_LookUp(self):
+
+        self.lookup_queue.acquire()
+        self.mutex.acquire()
+        self.lookup_counter -= self.lookup_counter
+        if self.lookup_counter == 0:
+            self.dataAdder_queue.acquire()
+            self.dataAdder_queue.notify()
+            self.dataAdder_queue.release()
+            self.add_delete_queue.acquire()
+            self.add_delete_queue.notify()
+            self.add_delete_queue.release()
+        self.mutex.release()
+        self.lookup_queue.release()
+
+    def Lock_DataAdder(self):
+        self.dataAdder_queue.acquire()
+        self.mutex.acquire()
+        while self.busy:
+            self.mutex.release()
+            self.dataAdder_queue.wait()
+            self.mutex.acquire()
+        self.data_adder_counter += 1
+        self.mutex.release()
+        self.dataAdder_queue.notifyAll()
+        self.dataAdder_queue.release()
+
+    def Release_DataAdder(self):
+
+        self.dataAdder_queue.acquire()
+        self.mutex.acquire()
+        self.data_adder_counter -= self.data_adder_counter
+        if self.data_adder_counter == 0:
+            self.lookup_queue.acquire()
+            self.lookup_queue.notify()
+            self.lookup_queue.release()
+
+            self.add_delete_queue.acquire()
+            self.add_delete_queue.notify()
+            self.add_delete_queue.release()
+        self.mutex.release()
+        self.dataAdder_queue.release()
+
+    def Lock_Add_Delete(self):
+        self.add_delete_queue.acquire()
+        self.mutex.acquire()
+        while self.busy or self.data_adder_counter > 0 or self.lookup_counter > 0:
+            self.mutex.release()
+            self.add_delete_queue.wait()
+            self.mutex.acquire()
+        self.busy = True
+        self.mutex.release()
+        self.add_delete_queue.release()
+        
+    def Release_Add_Delete(self):
+        self.add_delete_queue.acquire()
+        self.dataAdder_queue.acquire()
+        self.lookup_queue.acquire()
+        self.mutex.acquire()
+        self.busy = False
+        self.mutex.release()
+        self.add_delete_queue.notify()
+        self.add_delete_queue.release()
+        self.dataAdder_queue.notify()
+        self.dataAdder_queue.release()
+        self.lookup_queue.notify()
+        self.lookup_queue.release()
+
+monitor = Monitor()
+
 if __name__ == '__main__':
     
     net = Chord()
+
     '''
     net.addNode(1) # 1 is id of Node
     net.addNode(4) # 4 is id of Node
@@ -367,20 +373,19 @@ if __name__ == '__main__':
     for i in range(len(nodes)):
         print(nodes[i])
         for x in nodes[i].datas:
-            print("Data key: " + str(x.key) + ", Data value: "+ str(x.val) )
+            print("$ Data key: " + str(x.key) + ", Data value: "+ str(x.val) )
 
     lookup_list = []
-    print("Do you want to search a data? 1)yes 2)no")
+    print("Search? (y/n)")
     #
-    c = int(input())
-    while c == 1:
-        print("Enter agent id: ", end="")
-        peer_id = int(input())
-        print("Enter data key: ", end="")
-        data_key = int(input())
+    usr_in = input()
+    while usr_in == "y":
+        
+        peer_id = int(input("Node ID: "))
+        data_key = int(input("Data Key: "))
         lookup_list.append(Thread(target=net.lookup, args=[peer_id, data_key]))
-        print("Do you want to keep searching? 1)yes 2)no")
-        c = int(input())
+        print("More searching? (y/n) ")
+        usr_in = input()
 
     for i in range(len(lookup_list)):
         lookup_list[i].start()
@@ -388,25 +393,24 @@ if __name__ == '__main__':
         lookup_list[i].join()
 
 
-    remove_list = []
-    print("Do you want to remove an agent? 1)yes 2)no")
-    c= int(input())
-    while c == 1:
-        print("Enter agent id: ", end="")
-        peer_id = int(input())
-        remove_list.append(Thread(target=net.deleteNode, args=[peer_id]))
-        print("Do you want to continue removing? 1)yes 2)no")
-        c = int(input())
+    delete_list = []
+    print("Wanna Delete Node?(y/n)")
+    usr_in = input()
+    while usr_in == "y":
+        peer_id = int(input("Node ID: "))
+        delete_list.append(Thread(target=net.deleteNode, args=[peer_id]))
+        print("More Deleting? (y/n)")
+        usr_in = input()
 
-    for i in range(len(remove_list)):
-        remove_list[i].start()
-    for i in range(len(remove_list)):
-        remove_list[i].join()
+    for i in range(len(delete_list)):
+        delete_list[i].start()
+    for i in range(len(delete_list)):
+        delete_list[i].join()
 
     for i in range(len(nodes)):
         print(nodes[i])
         for x in nodes[i].datas:
-            print("Data key: " + str(x.key) + ", Data value: "+ str(x.val) )
+            print("$ Data key: " + str(x.key) + ", Data value: "+ str(x.val) )
 
 
     '''
