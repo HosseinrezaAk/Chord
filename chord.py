@@ -17,7 +17,7 @@ class Data:
     ''' 
         Man baraye Test codam ro az halate dynamic dar ovordam ke betunam rahat testesh konam
         vali agar mikhahid be soorate dynamic kar konad kafist bejaye "data_id" dar khate 
-        25 function "addkey()" ra ezaf konid va dar oon halat faghat bayad hengame seda zadan
+        26 function "addkey()" ra ezaf konid va dar oon halat faghat bayad hengame seda zadan
         dataAdder() 1 variable be an pass dahid.
 
     '''
@@ -143,27 +143,30 @@ class Chord():
                 peer.datas.append(next_node.datas[i])
 
     def deleteNode(self,id):
-        del_peer = Node()
-        peer_after = Node()
-        peer_before = Node()
+        print("ASDL:KAJSD:LASJKD:LKASD")
+        
         for i in range(len(nodes)):
             if(nodes[i].id == id):
+               
                 del_peer = nodes[i]
                 break
-            else:
-                return 
+            
 
         #fixing Pred and succ
         peer_after = nodes[i+1]
         peer_before = nodes[i-1]
-        peer_after.pred_cal(i-1)
-        peer_before.succ_cal(i+1)
+
+        peer_after.pred = peer_before
+        peer_before.succ = peer_after
         #update data On delete
         peer_after.datas = peer_after.datas+del_peer.datas
+        print("ASDL:KAJSD:LASJKD:LKASD")
+        i = nodes.index(del_peer)-1
 
         nodes.remove(del_peer)
+
         counter = 0
-        i = nodes.index(del_peer)-1
+        
         while(counter < 5 ): #update fingerTables of Previous Nodes
             nodes[i].FingerTable()
             counter += 1 
@@ -234,10 +237,14 @@ if __name__ == '__main__':
     net.dataAdder(12,20)
     net.dataAdder(26,12)
     net.dataAdder(20,21)
+    net.dataAdder(15,17) # this is for checking update the Dataset after Deleting Node 18
+    
     # net.dataAdder(2)  # this is example of dynamic dataAdder as I explained in DataClass
 
     temp = net.lookup(1,26) # THis is lookUp example
     
+    net.deleteNode(18) 
+
     for i in range(len(nodes)):
         print(nodes[i])
         for x in nodes[i].datas:
