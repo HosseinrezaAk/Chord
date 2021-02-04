@@ -130,7 +130,10 @@ class Chord():
             counter += 1 
             i -= 1
 
+    def dataAdder(self):
+        new_data = Data()
         
+
 
         
 
