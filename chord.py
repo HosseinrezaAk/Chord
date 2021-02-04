@@ -36,7 +36,7 @@ class Node:
         return val_id
 
     def pred_cal(self,peer_index):
-        pred_index = None
+        
         if(peer_index == 0 ):
             if(len(nodes) == 1):
                 return 
@@ -49,7 +49,7 @@ class Node:
             self.pred = nodes[pred_index]
     
     def succ_cal(self, peer_index):
-        succ_index =None
+        
         if(peer_index == len(nodes)-1):
             if(len(nodes) == 1 ):
                 return
@@ -68,12 +68,15 @@ class Node:
             temp = self.id + 2**(i-1) % nodes[len(nodes)-1].id 
             counter = 0
             while (counter < len(nodes)):
-                if(nodes[counter].key >= temp):
+                if(nodes[counter].id >= temp):
                     self.ft.append(temp)
                     break
                 counter += 1
             i += 1
-
+    def __str__(self):
+        s = [self.id,self.pred,self.succ,self.datas,self.ft]
+        listToStr = ' ,'.join([str(elem) for elem in s]) 
+        return listToStr
 
 class Chord():
     def __init__(self):
@@ -82,16 +85,20 @@ class Chord():
     def addNode(self):
         peer = Node()
         nodes.append(peer)
-        nodes.sort(key=lambda x: peer.id)
+        nodes.sort(key=lambda x: peer.id)   
         peer.pred_cal(nodes.index(peer)) 
         peer.succ_cal(nodes.index(peer))
-        self.updateDataOnAdd(peer) #data az node badi miad to node jadid
+
+       
+        if(len(nodes) > 1):
+            self.updateDataOnAdd(peer) #data az node badi miad to node jadid
+        
         peer.FingerTable()
 
         # baraye update kardan finger table
         counter = 0
         i = nodes.index(peer)-1
-        while(counter < 5 ):
+        while(counter < 5 and i >= 0):
             nodes[i].FingerTable()
             counter += 1 
             i -= 1
@@ -177,7 +184,11 @@ class Chord():
 if __name__ == '__main__':
     
     net = Chord()
-        
+    net.addNode()
+    net.addNode()
+
+    print(nodes[0])
+
 
 
 
