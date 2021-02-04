@@ -13,43 +13,17 @@ import random
 from threading import Lock, Condition, Thread
 
 class Monitor:
+
     def __init__(self):
         self.nLookups = 0
         self.nDatas = 0
         self.busy = False
-        self.OKtoAddRemove = Condition() #mesle write hast
-        self.OKtoLookup = Condition() #mesle read hast
+        self.OKtoAddRemove = Condition() 
+        self.OKtoLookup = Condition() 
         self.OKtoAddData = Condition()
         self.mutex = Lock()
 
-    # vaghti add ya remove darim nabayad kare dg ei anjam beshe
-    def startAddRemove(self):
-        self.OKtoAddRemove.acquire()
-        self.mutex.acquire()
-        while self.busy or self.nDatas > 0 or self.nLookups > 0:
-            self.mutex.release()
-            self.OKtoAddRemove.wait()
-            self.mutex.acquire()
-        self.busy = True
-        self.mutex.release()
-        self.OKtoAddRemove.release()
-        
-    def endAddRemove(self):
-        self.OKtoAddRemove.acquire()
-        self.OKtoAddData.acquire()
-        self.OKtoLookup.acquire()
-        self.mutex.acquire()
-        self.busy = False
-        self.mutex.release()
-        self.OKtoAddRemove.notify()
-        self.OKtoAddRemove.release()
-        self.OKtoAddData.notify()
-        self.OKtoAddData.release()
-        self.OKtoLookup.notify()
-        self.OKtoLookup.release()
-
-    # faghat lookup ha mitoonan hamzamn anjam beshan, baghiye kara nemitoonan anjam beshan
-    def startLookup(self):
+    def Lock_LookUp(self):
         self.OKtoLookup.acquire()
         self.mutex.acquire()
         while self.busy:
@@ -60,7 +34,7 @@ class Monitor:
         self.mutex.release()
         self.OKtoLookup.notifyAll()
         self.OKtoLookup.release()
-    def endLookup(self):
+    def Release_LookUp(self):
         self.OKtoLookup.acquire()
         self.mutex.acquire()
         self.nLookups -= self.nLookups
@@ -74,9 +48,8 @@ class Monitor:
             self.OKtoAddRemove.release()
         self.mutex.release()
         self.OKtoLookup.release()
-    
-    # vaghti ke data ei mikhad add beshe, hich kare dg ei nemitoone anjam beshe
-    def startAddData(self):
+
+    def Lock_DataAdder(self):
         self.OKtoAddData.acquire()
         self.mutex.acquire()
         while self.busy:
@@ -87,7 +60,7 @@ class Monitor:
         self.mutex.release()
         self.OKtoAddData.notifyAll()
         self.OKtoAddData.release()
-    def endAddData(self):
+    def Release_DataAdder(self):
         self.OKtoAddData.acquire()
         self.mutex.acquire()
         self.nDatas -= self.nDatas
@@ -102,7 +75,30 @@ class Monitor:
         self.mutex.release()
         self.OKtoAddData.release()
 
-
+    def Lock_Add_Delete(self):
+        self.OKtoAddRemove.acquire()
+        self.mutex.acquire()
+        while self.busy or self.nDatas > 0 or self.nLookups > 0:
+            self.mutex.release()
+            self.OKtoAddRemove.wait()
+            self.mutex.acquire()
+        self.busy = True
+        self.mutex.release()
+        self.OKtoAddRemove.release()
+        
+    def Release_Add_Delete(self):
+        self.OKtoAddRemove.acquire()
+        self.OKtoAddData.acquire()
+        self.OKtoLookup.acquire()
+        self.mutex.acquire()
+        self.busy = False
+        self.mutex.release()
+        self.OKtoAddRemove.notify()
+        self.OKtoAddRemove.release()
+        self.OKtoAddData.notify()
+        self.OKtoAddData.release()
+        self.OKtoLookup.notify()
+        self.OKtoLookup.release()
 
 
 
@@ -218,7 +214,7 @@ class Chord():
         nodes_num = 32
         
     def addNode(self):
-        monitor.startAddRemove()
+        monitor.Lock_Add_Delete()
 
         peer = Node()
         nodes.append(peer)
@@ -243,7 +239,7 @@ class Chord():
             counter += 1 
             i -= 1   
 
-        monitor.endAddRemove()
+        monitor.Release_Add_Delete()
     def updateDataOnAdd(self,peer):
         next_node = peer.succ
         for i in range(len(next_node.datas)) :
@@ -251,7 +247,7 @@ class Chord():
                 peer.datas.append(next_node.datas[i])
 
     def deleteNode(self,id):
-        monitor.startAddRemove
+        monitor.Lock_Add_Delete
         
         for i in range(len(nodes)):
             if(nodes[i].id == id):
@@ -279,9 +275,9 @@ class Chord():
             nodes[i].FingerTable()
             counter += 1 
             i -= 1
-        monitor.endAddRemove()
+        monitor.Release_Add_Delete()
     def dataAdder(self,value):
-        monitor.startAddData()
+        monitor.Lock_DataAdder()
 
         new_data = Data(value)
         #where data should go
@@ -291,10 +287,10 @@ class Chord():
                 break
         all_data.append(new_data)
 
-        monitor.endAddData()
+        monitor.Release_DataAdder()
     def lookup(self,node_id,data_key):
         #test : node_id == 1 , data_key == 26
-        monitor.startLookup()
+        monitor.Lock_LookUp()
 
         for i in range(len(nodes)):
             if(nodes[i].id == node_id):
@@ -307,6 +303,7 @@ class Chord():
                 
                 for k in range(len(nodes)):
                     if( nodes[k].id == result_peer_id):
+                        print("Data: "+str(data_key)+" is in: --> "+ "Node: "+str(nodes[k].id))
                         return nodes[k]
 
             elif(i == len(peer.ft)-1  and peer.ft[i] < data_key): # vaghty khune akhar FT mishe 18 va data_key == 26 va bayad berim peer jadid
@@ -326,11 +323,12 @@ class Chord():
                 result_peer_id = peer.ft[i]            
                 for k in range(len(nodes)):
                     if( nodes[k].id == result_peer_id):
+                        print("Data: "+str(data_key)+" is in: --> "+ "Node: "+str(nodes[k].id))
                         return nodes[k]
             else:
                 i += 1
 
-        monitor.endLookup()
+        monitor.Release_LookUp()
                 
 if __name__ == '__main__':
     
@@ -373,15 +371,15 @@ if __name__ == '__main__':
 
     lookup_list = []
     print("Do you want to search a data? 1)yes 2)no")
-    print("***your agent id must be less than your data key***")
+    #
     c = int(input())
     while c == 1:
         print("Enter agent id: ", end="")
-        agent_id = int(input())
+        peer_id = int(input())
         print("Enter data key: ", end="")
         data_key = int(input())
-        lookup_list.append(Thread(target=network.lookUp, args=[agent_id, data_key]))
-        print("Do you want to continue searching? 1)yes 2)no")
+        lookup_list.append(Thread(target=net.lookup, args=[peer_id, data_key]))
+        print("Do you want to keep searching? 1)yes 2)no")
         c = int(input())
 
     for i in range(len(lookup_list)):
@@ -390,7 +388,25 @@ if __name__ == '__main__':
         lookup_list[i].join()
 
 
+    remove_list = []
+    print("Do you want to remove an agent? 1)yes 2)no")
+    c= int(input())
+    while c == 1:
+        print("Enter agent id: ", end="")
+        peer_id = int(input())
+        remove_list.append(Thread(target=net.deleteNode, args=[peer_id]))
+        print("Do you want to continue removing? 1)yes 2)no")
+        c = int(input())
 
+    for i in range(len(remove_list)):
+        remove_list[i].start()
+    for i in range(len(remove_list)):
+        remove_list[i].join()
+
+    for i in range(len(nodes)):
+        print(nodes[i])
+        for x in nodes[i].datas:
+            print("Data key: " + str(x.key) + ", Data value: "+ str(x.val) )
 
 
     '''
