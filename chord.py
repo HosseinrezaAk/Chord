@@ -135,7 +135,12 @@ class Chord():
         new_data = Data()
         new_data.addKey()
         new_data.val = value
-
+            
+        #where data should go
+        for i in range(len(nodes)):
+            if(new_data.key <= nodes[i].id):
+                nodes[i].datas.append(new_data)
+                
 
 
 
