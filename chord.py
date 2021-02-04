@@ -19,10 +19,6 @@ all_data =[] # this was for testing truthness of Data assigning
 
 class Data:
     ''' 
-        Man baraye Test codam ro az halate dynamic dar ovordam ke betunam rahat testesh konam
-        vali agar mikhahid be soorate dynamic kar konad kafist bejaye "data_id" dar khate 
-        26 function "addkey()" ra ezaf konid va dar oon halat faghat bayad hengame seda zadan
-        dataAdder() 1 variable be an pass dahid.
 
     '''
     def __init__(self,v):
@@ -40,9 +36,7 @@ class Data:
 
 class Node:
     '''
-        inja ham b hamin shekl , Karkarde class kamelan vazehe va baraye test man
-        karkard datagiri ro avaz kardm ke betunam be soorate dasti az daste Main betunam vared konam
-        vali dar Funtionality code hich taghiri ijad nashode va doros kar miknad
+
     '''
     def __init__(self):
         self.id = self.addId()
@@ -340,6 +334,7 @@ if __name__ == '__main__':
     net = Chord()
 
     '''
+    THIS IS TEST , NEED FOR Class example test
     net.addNode(1) # 1 is id of Node
     net.addNode(4) # 4 is id of Node
     net.addNode(9)
@@ -350,24 +345,27 @@ if __name__ == '__main__':
     net.addNode(21)
     net.addNode(28)
     '''
-    
+
+    usr_input1 = int(input("\nNumber of Nodes: "))
+    usr_input2 = int(input("Number of Datas: "))
+    # 
     addList_nodes = []
-    for i in range(9):
+    for i in range(usr_input1):
         addList_nodes.append(Thread(target=net.addNode))
-    for i in range(9):
+    for i in range(usr_input1):
         addList_nodes[i].start()
-    for i in range(9):
+    for i in range(usr_input1):
         addList_nodes[i].join()
 
     # for i in range(len(nodes)):
     #     print(nodes[i])
     
     addList_data =[]
-    for i in range(15):
+    for i in range(usr_input2):
         addList_data.append(Thread(target=net.dataAdder, args = [random.randint(1,50)]))
-    for i in range(15):
+    for i in range(usr_input2):
         addList_data[i].start()
-    for i in range(15):
+    for i in range(usr_input2):
         addList_data[i].join()
 
     for i in range(len(nodes)):
@@ -376,15 +374,14 @@ if __name__ == '__main__':
             print("$ Data key: " + str(x.key) + ", Data value: "+ str(x.val) )
 
     lookup_list = []
-    print("Search? (y/n)")
-    #
+    print("\nSearch? (y/n)")
     usr_in = input()
     while usr_in == "y":
         
         peer_id = int(input("Node ID: "))
         data_key = int(input("Data Key: "))
         lookup_list.append(Thread(target=net.lookup, args=[peer_id, data_key]))
-        print("More searching? (y/n) ")
+        print("\nMore searching? (y/n) ")
         usr_in = input()
 
     for i in range(len(lookup_list)):
@@ -394,12 +391,12 @@ if __name__ == '__main__':
 
 
     delete_list = []
-    print("Wanna Delete Node?(y/n)")
+    print("\nWanna Delete Node?(y/n)")
     usr_in = input()
     while usr_in == "y":
         peer_id = int(input("Node ID: "))
         delete_list.append(Thread(target=net.deleteNode, args=[peer_id]))
-        print("More Deleting? (y/n)")
+        print("\nMore Deleting? (y/n)")
         usr_in = input()
 
     for i in range(len(delete_list)):
@@ -412,6 +409,10 @@ if __name__ == '__main__':
         for x in nodes[i].datas:
             print("$ Data key: " + str(x.key) + ", Data value: "+ str(x.val) )
 
+
+
+
+#These are TEST for Class example
 
     '''
     net.dataAdder(2,3) # 2 value , 3 key
