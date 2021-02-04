@@ -3,18 +3,20 @@ import random
 data_keys = []
 
 nodes = []
+
+all_data =[]
 class Data:
     def __init__(self,v):
         self.val = v
         self.key = self.addKey()
-    
+        
     def addKey(self):
         val_key = random.randint(1,32)
         while(val_key in data_keys):
             val_key = random.randint(1,32)
         data_keys.append(val_key)
         return val_key
-
+    
 
 class Node:
     def __init__(self,id_test):
@@ -26,7 +28,7 @@ class Node:
         self.ft = []
 
     def addId(self):
-        val_id = random.randint(1,32)
+        val_id = random.randint(1,28)
         node_counter =0
 
         while( node_counter > len(nodes) ):
@@ -81,7 +83,7 @@ class Node:
         
     def __str__(self):
         # s = [self.id,self.pred,self.succ,self.datas,self.ft]
-        s = [self.id,self.datas,self.ft]
+        s = [self.id,self.ft]
         listToStr = ' ,'.join([str(elem) for elem in s]) 
         return listToStr
 
@@ -152,15 +154,15 @@ class Chord():
             i -= 1
 
     def dataAdder(self,value):
-        new_data = Data()
+        new_data = Data(value)
         new_data.addKey()
-        new_data.val = value
             
         #where data should go
         for i in range(len(nodes)):
             if(new_data.key <= nodes[i].id):
                 nodes[i].datas.append(new_data)
-    
+                break
+        all_data.append(new_data)
     def lookup(self,node_id,data_key):
         #test : node_id == 1 , data_key == 26
         for i in range(len(nodes)):
@@ -207,13 +209,24 @@ if __name__ == '__main__':
     net.addNode(21)
     net.addNode(28)
 
+    net.dataAdder(2)
+    net.dataAdder(6)
+    net.dataAdder(1)
+    net.dataAdder(12)
+    net.dataAdder(26)
+    net.dataAdder(20)
+
     for i in range(len(nodes)):
         print(nodes[i])
-    print(len(nodes))
+        for x in nodes[i].datas:
+            
+            print(" key: " + str(x.key) )
+        
+    # for i in range(len(all_data)): #Debugger DataAdder
+    #     print("key: "+ str(all_data[i].key)+ ", value: "+ str(all_data[i].val))
 
-    print("FOR SUCC AND PRED :")
 
-    # for i in range(len(nodes)): #DEBUGGER
+    # for i in range(len(nodes)): #DEBUGGER succ and pred
         # print("Node.id: "+str(nodes[i].id)+", pred.id: "+ str(nodes[i].pred)+", succ.id: "+ str(nodes[i].succ))
 
 
