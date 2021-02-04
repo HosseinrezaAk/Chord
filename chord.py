@@ -1,3 +1,7 @@
+
+
+
+
 import random
 
 data_keys = []
@@ -84,7 +88,8 @@ class Node:
     def __str__(self):
         # s = [self.id,self.pred,self.succ,self.datas,self.ft]
         s = [self.id,self.ft]
-        listToStr = ' ,'.join([str(elem) for elem in s]) 
+        # listToStr = ' ,'.join([str(elem) for elem in s]) 
+        listToStr = "\nNode ID: "+ str(self.id)+ ", FingerTable: "+ str(self.ft)
         return listToStr
 
 class Chord():
@@ -169,7 +174,7 @@ class Chord():
                 peer = nodes[i]
         i =0  
         while( i < len(peer.ft)):
-            print("peer.id: "+ str(peer.id) +", i: " + str(i))
+            # print("peer.id: "+ str(peer.id) +", i: " + str(i)) #DEBUGGER
             if(peer.ft[i] == data_key ):
                 result_peer_id = peer.ft[i]
                 
@@ -219,15 +224,21 @@ if __name__ == '__main__':
     net.dataAdder(26,12)
     net.dataAdder(20,21)
 
-    temp = net.lookup(1,26)
+    temp = net.lookup(1,26) # THis is lookUp example
     
     for i in range(len(nodes)):
         print(nodes[i])
         for x in nodes[i].datas:
             
-            print(" key: " + str(x.key) )
+            print("Data key: " + str(x.key) + ", Data value: "+ str(x.val) )
     
-    print("result : " + str(temp))
+    print("\nresult for Look Up : " + str(temp)) # this is the result of lookUp
+
+
+
+
+
+
     # for i in range(len(all_data)): #Debugger DataAdder
     #     print("key: "+ str(all_data[i].key)+ ", value: "+ str(all_data[i].val))
 
