@@ -14,9 +14,7 @@ class Data:
             val_key = random.randint(1,32)
         data_keys.append(val_key)
         return val_key
-    def setData(self):
-        #where data should go
-        
+
 
 class Node:
     def __init__(self):
