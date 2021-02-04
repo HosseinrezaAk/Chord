@@ -96,8 +96,13 @@ class Chord():
         peer.pred_cal(nodes.index(peer)) 
         peer.succ_cal(nodes.index(peer))
 
+        
+        
+
        
         if(len(nodes) > 1):
+            peer.succ.pred = peer
+            peer.pred.succ = peer
             self.updateDataOnAdd(peer) #data az node badi miad to node jadid
         
         # peer.FingerTable()
@@ -206,7 +211,10 @@ if __name__ == '__main__':
         print(nodes[i])
     print(len(nodes))
 
+    print("FOR SUCC AND PRED :")
 
+    # for i in range(len(nodes)): #DEBUGGER
+        # print("Node.id: "+str(nodes[i].id)+", pred.id: "+ str(nodes[i].pred)+", succ.id: "+ str(nodes[i].succ))
 
 
         
