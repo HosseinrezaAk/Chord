@@ -5,6 +5,9 @@ Hosseinreza Akbari
 
 I have both English and Persian comments ,
  in different situation I prefer type in persian like Long sentences.
+
+baraye Estefade az barname , barname ra Run konid va INPUT hara ba tavajoh be Payam
+vared konid , va bad baraye shoma be soorate Random Data va Node eejad mishavad
 '''
 
 
@@ -19,7 +22,8 @@ all_data =[] # this was for testing truthness of Data assigning
 
 class Data:
     ''' 
-
+        Data value va Key dare 
+        ke Key be soorate Random va unique hast
     '''
     def __init__(self,v):
         self.val = v
@@ -36,6 +40,8 @@ class Data:
 
 class Node:
     '''
+        Node , id Unique va random darad,
+        Data va FT typeshun list hast
 
     '''
     def __init__(self):
@@ -86,6 +92,9 @@ class Node:
             self.succ = nodes[succ_index]
 
     def FingerTable(self):
+        '''
+            in function baraye mohasebe Finger table hast
+        '''
         row = 5
         i = 0
         self.ft =[]
@@ -104,15 +113,18 @@ class Node:
             i += 1
         
     def __str__(self):
-        # s = [self.id,self.pred,self.succ,self.datas,self.ft]
+    
         s = [self.id,self.ft]
-        # listToStr = ' ,'.join([str(elem) for elem in s]) 
         listToStr = "\n### Node ID: "+ str(self.id)+ ", FingerTable: "+ str(self.ft)
         return listToStr
 
 class Chord():
+    
+    '''
+        Chord shabake dayeriie  hast ke Function haye Asli ro inja tarif kardam
+    '''
     def __init__(self):
-        nodes_num = 32
+        nodes_num = 32 # in hich estefadeii nadarad faghat baraye raf error az khali boodan hast
         
     def addNode(self):
         monitor.Lock_Add_Delete()
