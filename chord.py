@@ -12,7 +12,7 @@ import random
 
 data_keys = []
 nodes = []
-#all_data =[] # this was for testing truthness of Data assigning 
+all_data =[] # this was for testing truthness of Data assigning 
 class Data:
     ''' 
         Man baraye Test codam ro az halate dynamic dar ovordam ke betunam rahat testesh konam
