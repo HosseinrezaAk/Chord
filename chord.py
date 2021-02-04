@@ -370,7 +370,29 @@ if __name__ == '__main__':
         print(nodes[i])
         for x in nodes[i].datas:
             print("Data key: " + str(x.key) + ", Data value: "+ str(x.val) )
-            
+
+    lookup_list = []
+    print("Do you want to search a data? 1)yes 2)no")
+    print("***your agent id must be less than your data key***")
+    c = int(input())
+    while c == 1:
+        print("Enter agent id: ", end="")
+        agent_id = int(input())
+        print("Enter data key: ", end="")
+        data_key = int(input())
+        lookup_list.append(Thread(target=network.lookUp, args=[agent_id, data_key]))
+        print("Do you want to continue searching? 1)yes 2)no")
+        c = int(input())
+
+    for i in range(len(lookup_list)):
+        lookup_list[i].start()
+    for i in range(len(lookup_list)):
+        lookup_list[i].join()
+
+
+
+
+
     '''
     net.dataAdder(2,3) # 2 value , 3 key
     net.dataAdder(6,4)
