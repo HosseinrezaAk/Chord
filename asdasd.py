@@ -122,10 +122,9 @@ class Data:
         dataAdder() 1 variable be an pass dahid.
 
     '''
-    def __init__(self,v):
+    def __init__(self,v,data_id):
         self.val = v
-        # self.key = data_id
-        self.key = self.addKey()
+        self.key = data_id
         
     def addKey(self):
         val_key = random.randint(1,32)
@@ -141,25 +140,22 @@ class Node:
         karkard datagiri ro avaz kardm ke betunam be soorate dasti az daste Main betunam vared konam
         vali dar Funtionality code hich taghiri ijad nashode va doros kar miknad
     '''
-    def __init__(self):
-        self.id = self.addId()
-        # self.id = id_test #this is for test , mesale Ostad
+    def __init__(self,id_test):
+        # self.id = self.addId()
+        self.id = id_test #this is for test , mesale Ostad
         self.pred = None
         self.succ = None
         self.datas = []
         self.ft = []
 
     def addId(self):
-
         val_id = random.randint(1,32)
         node_counter =0
 
-        while( node_counter < len(nodes) ):
+        while( node_counter > len(nodes) ):
             if(nodes[node_counter].id == val_id):
                     val_id = random.randint(1,32)
-                    node_counter = 0
-            else:
-                node_counter += 1
+            node_counter += 1
         
         return val_id
 
@@ -217,10 +213,9 @@ class Chord():
     def __init__(self):
         nodes_num = 32
         
-    def addNode(self):
+    def addNode(self,id_test):
         monitor.startAddRemove()
-
-        peer = Node()
+        peer = Node(id_test)
         nodes.append(peer)
         nodes.sort(key=lambda x: x.id)   
         peer.pred_cal(nodes.index(peer)) 
@@ -251,7 +246,7 @@ class Chord():
                 peer.datas.append(next_node.datas[i])
 
     def deleteNode(self,id):
-        monitor.startAddRemove
+        
         
         for i in range(len(nodes)):
             if(nodes[i].id == id):
@@ -279,23 +274,17 @@ class Chord():
             nodes[i].FingerTable()
             counter += 1 
             i -= 1
-        monitor.endAddRemove()
-    def dataAdder(self,value):
-        monitor.startAddData()
 
-        new_data = Data(value)
+    def dataAdder(self,value,data_id):
+        new_data = Data(value,data_id)
         #where data should go
         for i in range(len(nodes)):
             if(new_data.key <= nodes[i].id):
                 nodes[i].datas.append(new_data)
                 break
         all_data.append(new_data)
-
-        monitor.endAddData()
     def lookup(self,node_id,data_key):
         #test : node_id == 1 , data_key == 26
-        monitor.startLookup()
-
         for i in range(len(nodes)):
             if(nodes[i].id == node_id):
                 peer = nodes[i]
@@ -330,12 +319,11 @@ class Chord():
             else:
                 i += 1
 
-        monitor.endLookup()
+
                 
 if __name__ == '__main__':
     
     net = Chord()
-    '''
     net.addNode(1) # 1 is id of Node
     net.addNode(4) # 4 is id of Node
     net.addNode(9)
@@ -345,33 +333,9 @@ if __name__ == '__main__':
     net.addNode(20)
     net.addNode(21)
     net.addNode(28)
-    '''
-    
-    addList_nodes = []
-    for i in range(9):
-        addList_nodes.append(Thread(target=net.addNode))
-    for i in range(9):
-        addList_nodes[i].start()
-    for i in range(9):
-        addList_nodes[i].join()
 
-    # for i in range(len(nodes)):
-    #     print(nodes[i])
-    
-    addList_data =[]
-    for i in range(15):
-        addList_data.append(Thread(target=net.dataAdder, args = [random.randint(1,50)]))
-    for i in range(15):
-        addList_data[i].start()
-    for i in range(15):
-        addList_data[i].join()
 
-    for i in range(len(nodes)):
-        print(nodes[i])
-        for x in nodes[i].datas:
-            print("Data key: " + str(x.key) + ", Data value: "+ str(x.val) )
-            
-    '''
+
     net.dataAdder(2,3) # 2 value , 3 key
     net.dataAdder(6,4)
     net.dataAdder(1,26)
@@ -393,7 +357,7 @@ if __name__ == '__main__':
             print("Data key: " + str(x.key) + ", Data value: "+ str(x.val) )
     
     print("\nresult for Look Up : " + str(temp)) # this is the result of lookUp
-    '''
+
 
 
 '''
