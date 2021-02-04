@@ -140,7 +140,10 @@ class Chord():
         for i in range(len(nodes)):
             if(new_data.key <= nodes[i].id):
                 nodes[i].datas.append(new_data)
-                
+    
+    def lookup(self,node_id,data_key):
+        
+
 
 
 
