@@ -173,6 +173,10 @@ class Chord():
                     if( nodes[k].id == result_peer_id):
                         return nodes[k]
         
+
+if __name__ == '__main__':
+    
+    net = Chord()
         
 
 
