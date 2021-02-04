@@ -155,8 +155,7 @@ class Chord():
 
     def dataAdder(self,value,data_id):
         new_data = Data(value,data_id)
-        
-            
+ 
         #where data should go
         for i in range(len(nodes)):
             if(new_data.key <= nodes[i].id):
@@ -181,22 +180,20 @@ class Chord():
             elif(i == len(peer.ft)-1  and peer.ft[i] < data_key): # vaghty khune akhar FT mishe 18 va data_key == 26 va bayad berim peer jadid
                 for j in range(len(nodes)): # searching for new peer
                     if(nodes[j].id == peer.ft[i]):
-                        peer = nodes[j] #peer = 18
-                        # print("HELLLLLLLLLLLLL "+ str(peer.id))
+                        peer = nodes[j] #peer = 18 
                         i = 0
-            # elif(i != len(peer.ft)-1 and peer.ft[i] < data_key):
-            #     i += 1 
+                        break
             elif( i != 0 and peer.ft[i] > data_key):
                 #vasate ft table idi bozorgtar az key mibinim pas ghablish ro bayad begirim
                 for j in range(len(nodes)):
                     if(nodes[j].id == peer.ft[i-1]):
                         peer = nodes[j]
                         i = 0
-            elif(i == 0 and peer.ft[i] > data_key):
-                result_peer_id = peer.ft[i]
-                
-                for k in range(len(nodes)):
+                        break
 
+            elif(i == 0 and peer.ft[i] > data_key):
+                result_peer_id = peer.ft[i]            
+                for k in range(len(nodes)):
                     if( nodes[k].id == result_peer_id):
                         return nodes[k]
             
@@ -222,7 +219,7 @@ if __name__ == '__main__':
     net.dataAdder(26,12)
     net.dataAdder(20,21)
 
-    temp = net.lookup(11,3)
+    temp = net.lookup(1,26)
     
     for i in range(len(nodes)):
         print(nodes[i])
