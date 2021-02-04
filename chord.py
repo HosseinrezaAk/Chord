@@ -199,8 +199,8 @@ class Chord():
 if __name__ == '__main__':
     
     net = Chord()
-    net.addNode(1)
-    net.addNode(4)
+    net.addNode(1) # 1 is id of Node
+    net.addNode(4) # 4 is id of Node
     net.addNode(9)
     net.addNode(11)
     net.addNode(14)
@@ -209,7 +209,7 @@ if __name__ == '__main__':
     net.addNode(21)
     net.addNode(28)
 
-    net.dataAdder(2)
+    net.dataAdder(2) # 2 is value not key
     net.dataAdder(6)
     net.dataAdder(1)
     net.dataAdder(12)
