@@ -142,6 +142,37 @@ class Chord():
                 nodes[i].datas.append(new_data)
     
     def lookup(self,node_id,data_key):
+        #test : node_id == 1 , data_key == 26
+        for i in range(len(nodes)):
+            if(nodes[i].id == node_id):
+                peer = nodes[i]
+
+        for i in range(len(peer.ft)):
+            if(peer.ft[i] == data_key ):
+                result_peer_id = peer.ft[i]
+                
+                for k in range(len(nodes)):
+                    if( nodes[k].id == result_peer_id):
+                        return nodes[k]
+
+            elif(i == len(peer.ft)-1  and peer.ft[i] < data_key): # vaghty khune akhar FT mishe 18 va data_key == 26 va bayad berim peer jadid
+                for j in range(len(nodes)): # searching for new peer
+                    if(nodes[j].id == peer.ft[i]):
+                        peer = nodes[j] #peer = 18
+                        i = 0
+            elif( i != 0 and peer.ft[i] > data_key):
+                #vasate ft table idi bozorgtar az key mibinim pas ghablish ro bayad begirim
+                for j in range(len(nodes)):
+                    if(nodes[j].id == peer.ft[i-1]):
+                        peer = nodes[j]
+                        i = 0
+            elif(i == 0 and peer.ft[i] > data_key):
+                result_peer_id = peer.ft[i]
+
+                for k in range(len(nodes)):
+                    if( nodes[k].id == result_peer_id):
+                        return nodes[k]
+        
         
 
 
