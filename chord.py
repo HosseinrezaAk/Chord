@@ -113,21 +113,24 @@ class Chord():
                 break
             else:
                 return 
+
+        #fixing Pred and succ
         peer_after = nodes[i+1]
         peer_before = nodes[i-1]
         peer_after.pred_cal(i-1)
         peer_before.succ_cal(i+1)
-
+        #update data On delete
         peer_after.datas = peer_after.datas+del_peer.datas
 
+        nodes.remove(del_peer)
         counter = 0
         i = nodes.index(del_peer)-1
-        while(counter < 5 ): #update fingerTables before deleted Node
+        while(counter < 5 ): #update fingerTables of Previous Nodes
             nodes[i].FingerTable()
             counter += 1 
             i -= 1
-            
-        nodes.remove(del_peer)
+
+        
 
         
 
