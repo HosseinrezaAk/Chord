@@ -1,15 +1,26 @@
+'''
+Hosseinreza Akbari
+9533840
 
+I have both English and Persian comments ,
+ in different situation I prefer type in persian like Long sentences.
+'''
 
 
 
 import random
 
 data_keys = []
-
 nodes = []
-
-all_data =[]
+#all_data =[] # this was for testing truthness of Data assigning 
 class Data:
+    ''' 
+        Man baraye Test codam ro az halate dynamic dar ovordam ke betunam rahat testesh konam
+        vali agar mikhahid be soorate dynamic kar konad kafist bejaye "data_id" dar khate 
+        25 function "addkey()" ra ezaf konid va dar oon halat faghat bayad hengame seda zadan
+        dataAdder() 1 variable be an pass dahid.
+
+    '''
     def __init__(self,v,data_id):
         self.val = v
         self.key = data_id
@@ -23,6 +34,11 @@ class Data:
     
 
 class Node:
+    '''
+        inja ham b hamin shekl , Karkarde class kamelan vazehe va baraye test man
+        karkard datagiri ro avaz kardm ke betunam be soorate dasti az daste Main betunam vared konam
+        vali dar Funtionality code hich taghiri ijad nashode va doros kar miknad
+    '''
     def __init__(self,id_test):
         # self.id = self.addId()
         self.id = id_test #this is for test , mesale Ostad
@@ -103,9 +119,6 @@ class Chord():
         peer.pred_cal(nodes.index(peer)) 
         peer.succ_cal(nodes.index(peer))
 
-        
-        
-
        
         if(len(nodes) > 1):
             peer.succ.pred = peer
@@ -121,9 +134,7 @@ class Chord():
         while(counter < 6 and i >= 0):
             nodes[i].FingerTable()
             counter += 1 
-            i -= 1
-
-        
+            i -= 1   
 
     def updateDataOnAdd(self,peer):
         next_node = peer.succ
@@ -160,7 +171,6 @@ class Chord():
 
     def dataAdder(self,value,data_id):
         new_data = Data(value,data_id)
- 
         #where data should go
         for i in range(len(nodes)):
             if(new_data.key <= nodes[i].id):
@@ -195,15 +205,16 @@ class Chord():
                         peer = nodes[j]
                         i = 0
                         break
-
             elif(i == 0 and peer.ft[i] > data_key):
                 result_peer_id = peer.ft[i]            
                 for k in range(len(nodes)):
                     if( nodes[k].id == result_peer_id):
                         return nodes[k]
-            
             else:
                 i += 1
+
+
+                
 if __name__ == '__main__':
     
     net = Chord()
@@ -223,6 +234,7 @@ if __name__ == '__main__':
     net.dataAdder(12,20)
     net.dataAdder(26,12)
     net.dataAdder(20,21)
+    # net.dataAdder(2)  # this is example of dynamic dataAdder as I explained in DataClass
 
     temp = net.lookup(1,26) # THis is lookUp example
     
@@ -236,7 +248,11 @@ if __name__ == '__main__':
 
 
 
-
+'''
+in some Lines of code i have # DEbugger 
+ ,you can use them to see what is happening in details if u want
+ ,otherwise ignore them.
+'''
 
 
     # for i in range(len(all_data)): #Debugger DataAdder
